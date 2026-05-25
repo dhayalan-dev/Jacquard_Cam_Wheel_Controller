@@ -85,8 +85,6 @@ void printPattern(
 
     for(uint8_t wheel = 0; wheel < NO_OF_WHEELS; wheel++)
     {
-        Serial.print("W"); Serial.print(wheel); Serial.print(": ");
-
         for(uint8_t step = 0; step < STEPS_PER_WHEEL; step++)
         {
             bool bit = getPatternBit(

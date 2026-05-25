@@ -19,7 +19,7 @@ void setup()
     // Load pattern from file system
     if (
         loadPatternFromFile(
-            "/patterns/diamond.bin",
+            "/patterns/heart.bin",
             pattern
         )
     )
@@ -32,7 +32,7 @@ void setup()
         while(1);
     }
 
-    printPattern("diamond", pattern);
+    printPattern("heart", pattern);
 }
 
 void loop()
