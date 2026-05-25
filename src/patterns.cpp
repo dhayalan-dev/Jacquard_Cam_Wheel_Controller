@@ -27,6 +27,13 @@ bool loadPatternFromFile(
         return false;
     }
 
+    if(file.size() != sizeof(pattern_t))
+    {
+        Serial.println("Pattern file size mismatch");
+        file.close();
+        return false;
+    }
+
     size_t bytesRead = 
     file.read(
         (uint8_t *)&pattern,
@@ -41,6 +48,7 @@ bool loadPatternFromFile(
 
 bool getPatternBit(
     const pattern_t &pattern,
+    uint8_t wheelIndex,
     uint8_t step
 )
 {
@@ -49,11 +57,45 @@ bool getPatternBit(
         return false;
     }
 
-    uint8_t byteIndex = step / 8; // Determine which part the step is in
-    uint8_t bitIndex = step % 8;  // Determine which bit within that part
+    uint8_t byteIndex = step / 8; // Determine which byte contains the step
+    uint8_t bitIndex = step % 8;  // Determine which bit within that byte
+
+    if(wheelIndex >= NO_OF_WHEELS)
+    {
+        printf("Invalid wheel index: %d\n", wheelIndex);
+        return false;
+    }
 
     return (
-        pattern.data[byteIndex] 
+        pattern.wheels[wheelIndex].data[byteIndex] 
         >> (7- bitIndex)
     ) & 0x01; // Shift the byte to the right and mask with 0x01 to get the bit value
+}
+
+void printPattern(
+    const char *patternName,
+    const pattern_t &pattern
+)
+{
+    Serial.println();
+
+    Serial.print("Pattern: "); Serial.println(patternName);
+
+    Serial.println();
+
+    for(uint8_t wheel = 0; wheel < NO_OF_WHEELS; wheel++)
+    {
+        Serial.print("W"); Serial.print(wheel); Serial.print(": ");
+
+        for(uint8_t step = 0; step < STEPS_PER_WHEEL; step++)
+        {
+            bool bit = getPatternBit(
+                pattern,
+                wheel,
+                step
+            );
+            Serial.print( bit ? "#" : " " );
+        }
+        Serial.println();
+    }
 }

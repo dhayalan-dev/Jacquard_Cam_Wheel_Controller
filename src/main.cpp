@@ -1,64 +1,41 @@
 #include <Arduino.h>
 
+#include "config.h"
 #include "patterns.h"
-#include "design.h"
 
-pattern_t currentTopPattern;
-pattern_t currentBottomPattern;
-
-void printPattern(  
-    const pattern_t &pattern
-)
-{
-  for(int r = 0; r < PATTERN_SIZE; r++)
-  {
-    for(int c = 0; c < PATTERN_SIZE; c++)
-    {
-      Serial.print(getCell(pattern, r, c));
-    }
-
-    Serial.println();
-  }
-}
+pattern_t pattern;
 
 void setup()
 {
     Serial.begin(115200);
+    Serial.println("Starting Jacquard Cam Wheel");
 
-    if(!initPatternFS()) return;
-
-    int selectedDesign = 0;
-
-    const design_t &currentDesign =
-        designs[selectedDesign];
-
-    Serial.println();
-    Serial.println(currentDesign.name);
-
-    if(loadPattern(
-        currentDesign.topPatternFile,
-        currentTopPattern
-    ))
+    if(!initPatternFS())
     {
-        Serial.println();
-        Serial.println("TOP PATTERN");
-
-        printPattern(currentTopPattern);
+        Serial.println("Failed to initialize pattern file system");
+        while(1);
     }
 
-    if(loadPattern(
-        currentDesign.bottomPatternFile,
-        currentBottomPattern
-    ))
+    // Load pattern from file system
+    if (
+        loadPatternFromFile(
+            "/patterns/diamond.bin",
+            pattern
+        )
+    )
     {
-        Serial.println();
-        Serial.println("BOTTOM PATTERN");
-
-        printPattern(currentBottomPattern);
+        Serial.println("Pattern loaded successfully");
     }
+    else
+    {
+        Serial.println("Failed to load pattern");
+        while(1);
+    }
+
+    printPattern("diamond", pattern);
 }
 
 void loop()
 {
-
+    // Nothing to do in the main loop for now
 }
