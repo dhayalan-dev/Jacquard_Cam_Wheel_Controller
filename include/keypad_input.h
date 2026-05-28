@@ -21,9 +21,15 @@
 #define KEYPAD_COL_4 13
 
 /*
- * KEYPAD ACTIONS
+ * @brief Enumeration for keypad actions
+ * KEYPAD_ACTION_NONE: No action detected
+ * KEYPAD_ACTION_UP: Up button pressed
+ * KEYPAD_ACTION_DOWN: Down button pressed
+ * KEYPAD_ACTION_LEFT: Left button pressed
+ * KEYPAD_ACTION_RIGHT: Right button pressed
+ * KEYPAD_ACTION_SELECT: Select button pressed
  */
-typedef enum
+enum keypad_action_e
 {
     KEYPAD_ACTION_NONE = 0,
     KEYPAD_ACTION_UP,
@@ -31,7 +37,7 @@ typedef enum
     KEYPAD_ACTION_LEFT,
     KEYPAD_ACTION_RIGHT,
     KEYPAD_ACTION_SELECT
-} keypad_action_e;
+};
 
 /*----------------------------------------
  * FUNCTION DECLARATIONS
