@@ -38,7 +38,7 @@ bool stepperMotorSleep(bool sleep);
  * @param steps Number of steps to move
  * @return true if the operation was successful, false otherwise
  */
-bool stepperMotorStep(uint32_t steps);
+bool stepperMotorStep(uint16_t steps);
 
 /**
  * @brief Moves the stepper motor by one cam position
