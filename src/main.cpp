@@ -5,11 +5,23 @@
 #include "patterns.h"
 #include "machine_controller.h"
 #include "pattern_registry.h"
+#include "wifi_manager.h"
+#include "web_server.h"
 
 void setup()
 {
     Serial.begin(115200);
     Serial.println("Starting Jacquard Cam Wheel");
+
+    if(!wifiManagerInit())
+    {
+        while (1);
+    }
+
+    if(!webServerInit())
+    {
+        while (1);
+    }
 
     if(!initPatternFS())
     {
@@ -27,5 +39,5 @@ void setup()
 
 void loop()
 {
-    // Nothing here
+    webServerUpdate();
 }
