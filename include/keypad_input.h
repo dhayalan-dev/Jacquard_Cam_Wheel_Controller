@@ -44,13 +44,13 @@ enum keypad_action_e
  *---------------------------------------
  */
 
-/*
+/**
  * @brief Initialize the keypad pins
  * @return true if initialization is successful, false otherwise
  */
 bool keypadInit();
 
-/*
+/**
  * @brief Read the current keypad action
  * @return The detected keypad action
  */

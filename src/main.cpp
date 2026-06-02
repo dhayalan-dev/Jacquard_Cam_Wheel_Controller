@@ -3,7 +3,9 @@
 #include "machine_config.h"
 #include "stepper_motor.h"
 #include "patterns.h"
+#include "lcd_display.h"
 #include "keypad_input.h"
+#include "ui_manager.h"
 
 pattern_t pattern;
 uint8_t numberOfWheels = NO_OF_WHEELS;
@@ -70,20 +72,27 @@ void matrixKeypad(keypad_action_e action)
         }
     }
 }
+
 void setup()
 {
     Serial.begin(115200);
     Serial.println("Starting Jacquard Cam Wheel");
 
-    if (!stepperMotorInit())
-    {
-        Serial.println("Failed to initialize stepper motor");
-        while(1);
-    }
-
     if(!initPatternFS())
     {
         Serial.println("Failed to initialize pattern file system");
+        while(1);
+    }
+
+    if (!lcdDisplayInit())
+    {
+        Serial.println("Failed to initialize LCD display");
+        while(1);
+    }
+
+    if (!uiManagerInit())
+    {
+        Serial.println("Failed to initialize LCD UI");
         while(1);
     }
 
@@ -92,6 +101,13 @@ void setup()
         Serial.println("Failed to initialize keypad");
         while(1);
     }
+    
+    if (!stepperMotorInit())
+    {
+        Serial.println("Failed to initialize stepper motor");
+        while(1);
+    }
+
 
     // Load pattern from file system
     if (
@@ -116,8 +132,5 @@ void setup()
 
 void loop()
 {
-    keypad_action_e action = keypadRead();
-
-    matrixKeypad(action);
-    
+    uiManagerUpdate();
 }
