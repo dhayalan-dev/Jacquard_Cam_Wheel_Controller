@@ -14,7 +14,6 @@ enum machine_state_e
     MACHINE_STATE_ERROR
 };
 
-pattern_t pattern;
 
 /**
  * @brief Initializes machine controller

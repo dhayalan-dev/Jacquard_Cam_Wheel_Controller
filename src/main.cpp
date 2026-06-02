@@ -4,12 +4,7 @@
 #include "stepper_motor.h"
 #include "patterns.h"
 #include "machine_controller.h"
-
-pattern_t pattern;
-uint8_t numberOfWheels = NO_OF_WHEELS;
-uint8_t currentWheelIndex = 0;
-uint8_t currentRepeatIndex = 0;
-uint8_t currentStep = 0;
+#include "pattern_registry.h"
 
 void setup()
 {
@@ -28,15 +23,9 @@ void setup()
         while(1);
     }
 
-    machineControllerInit();
-
-    machineControllerLoadPattern("/pattern/heart.bin");
-
-    machineControllerStart();
 }
 
 void loop()
 {
-    machineControllerUpdate();
-    delay(100);
+    // Nothing here
 }
