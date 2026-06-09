@@ -12,7 +12,6 @@ static uint8_t selectedPatternIndex = 0;
  * ===================Private Functions===================
  */
 
-
 /**
  * @brief Handle pattern selection requests from the web client.
  */
@@ -51,100 +50,181 @@ static void handlePatternSelect()
         Serial.println(selectedPatternIndex);
     }
 
-    server.sendHeader("Location", "/");
-
-    server.send(302, "text/plain", "");
+    server.send(200, "text/plain", "Pattern loaded");
 }
 
 static void handleRoot()
 {
-    String html;
+    File file = SPIFFS.open(
+        "/index.html",
+        FILE_READ
+    );
 
-    // HTML Start
-    html += "<html>";
-    html += "<head>";
-    html += "<title>Jacquard Controller</title>";
-    html += "</head>";
+    if (!file)
+    {
+        server.send(
+            404, "text/plain", "index.html not found"
+        );
 
-    html += "<body>";
+        return;
+    }
 
-    html += "<h1>Jacquard Controller</h1>";
+    server.streamFile(file, "text/html");
+    file.close();
+}
 
-    html += "<p>System Online</p>";
+static void handleStatus()
+{
+    /* Start of JSON Data 
+     * JSON structure : 
+     * {
+     *  state:IDLE/RUNNING/WAIT_FOR_NEXT_WHEEL/COMPLETED/ERROR,
+     *  wheel:currentWheelIndex,
+     *  step:currentStepIndex,
+     *  progress:currentProgressPercentage,
+     *  patternIndex:selectedPatternIndex,
+     *  patternName:selectedPatternName
+     * } 
+     */
+    String json = "{";
 
-    html += "<h2>Status</h2>";
-    switch(machineControllerGetState())
+    /* Current state */
+    json += "\"state\":\"";
+
+    switch (machineControllerGetState())
     {
         case MACHINE_STATE_IDLE:
-            html += "<p>IDLE</p>";
+            json += "IDLE";
             break;
-
+        
         case MACHINE_STATE_RUNNING:
-            html += "<p>RUNNING</p>";
+            json += "RUNNING";
             break;
-
+        
         case MACHINE_STATE_WAIT_FOR_NEXT_WHEEL:
-            html += "<p>WAITING FOR WHEEL CHANGE</p>";
+            json += "WAIT_FOR_NEXT_WHEEL";
             break;
-
+        
         case MACHINE_STATE_COMPLETED:
-            html += "<p>COMPLETED</p>";
+            json += "COMPLETED";
             break;
-
-        default:
-            html += "<p>ERROR</p>";
+        
+        case MACHINE_STATE_ERROR:
+            json += "ERROR";
             break;
     }
 
+    json += "\",";
+
+    /* Current wheel data */
+    json += "\"wheel\":";
+    json += String(machineControllerGetWheelIndex()); json += ",";
+
+    /* Current step data */
+    json += "\"step\":";
+    json += String(machineControllerGetStepIndex()); json += ",";
+
+    /* Progress */
+    json += "\"progress\":";
+    json += String(machineControllerGetProgress()); json += ",";
+
+    /* Selected Pattern Index*/
+    json += "\"patternIndex\":";
+    json += String(selectedPatternIndex); json += ",";
+
+    /* Selected Pattern Name */
+    json += "\"patternName\":";
     const pattern_entry_t *selectedPattern = patternRegistryGet(selectedPatternIndex);
-    html += "<p>Current Pattern : ";
-    if(selectedPattern != nullptr)
+    if (selectedPattern != nullptr)
     {
-        html += selectedPattern->name;
+        json += "\""; json += selectedPattern->name; json += "\"";
     }
     else
     {
-        html += "None";
+        json += "\"Unknown\"";
     }
-    html += "</p>";
 
-    html += "<h2> Available Patterns</h2>";
-    html += "<form action='/select' method='GET'>";
-    html += "<select name='pattern'>";
+    json += "}";
+    /* End of JSON Data */
+
+    server.send(
+        200, "application/json", json
+    );
+}
+
+static void handlePatterns()
+{
+    String json = "[";
+
     for(uint8_t i = 0; i < patternRegistryGetCount(); i++)
     {
         const pattern_entry_t *pattern = patternRegistryGet(i);
 
-        html += "<option value='";
-        html += String(i);              // Converting Index to string
-        html += "'";
-
-        if( i == selectedPatternIndex)
+        if(i > 0)
         {
-            html += " selected";
+            json += ",";
         }
-        html += ">";
-        html += pattern->name;
-        html += "</option>";
+
+        json += "{"; json += "\"id\":"; json += String(i); json += ",";
+
+        json += "\"name\":\""; json += pattern->name; json += "\""; json += "}";
     }
-    html += "</select>";
 
-    html += "<br><br>";
-
-    html += "<input "
-            "type='submit' "
-            "value='Load Pattern'>";
-    html += "</form>";
-
-    html += "</body>";
-    html += "</html>";
-    // HTML End
+    json += "]";
 
     server.send(
-        200,
-        "text/html",
-        html
+        200, "application/json", json
     );
+}
+
+static void handleCss()
+{
+    File file = SPIFFS.open(
+        "/style.css",
+        FILE_READ
+    );
+
+    if(!file)
+    {
+        server.send(
+            404,
+            "text/plain",
+            "style.css not found"
+        );
+        return;
+    }
+
+    server.streamFile(
+        file,
+        "text/css"
+    );
+
+    file.close();
+}
+
+static void handleJs()
+{
+    File file = SPIFFS.open(
+        "/script.js",
+        FILE_READ
+    );
+
+    if(!file)
+    {
+        server.send(
+            404,
+            "text/plain",
+            "script.js not found"
+        );
+        return;
+    }
+
+    server.streamFile(
+        file,
+        "application/javascript"
+    );
+
+    file.close();
 }
 
 /**
@@ -153,8 +233,12 @@ static void handleRoot()
 
 bool webServerInit()
 {
-    server.on("/", handleRoot);
-    server.on("/select", handlePatternSelect);
+    server.on("/",          handleRoot);
+    server.on("/style.css", handleCss);
+    server.on("/script.js", handleJs);
+    server.on("/status",    handleStatus);
+    server.on("/select",    handlePatternSelect);
+    server.on("/patterns",  handlePatterns);
 
     server.begin();
     Serial.println("Web Server Started");

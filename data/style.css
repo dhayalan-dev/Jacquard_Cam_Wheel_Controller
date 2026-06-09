@@ -1,0 +1,122 @@
+/* General Page */
+body
+{
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+
+    background-color: #f5f5f5;
+    color: #222;
+}
+
+/* Main Title */
+h1
+{
+    text-align: center;
+    color: #1565c0;
+}
+
+/* Status Box */
+#status
+{
+    padding: 12px;
+    margin-bottom: 20px;
+
+    background-color: white;
+
+    border-left: 5px solid #1565c0;
+
+    font-weight: bold;
+}
+
+/* Pattern Selection Area */
+.pattern-container
+{
+    background-color: white;
+
+    padding: 20px;
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Dropdown */
+select
+{
+    width: 100%;
+
+    padding: 10px;
+
+    font-size: 16px;
+
+    margin-bottom: 15px;
+}
+
+/* Buttons */
+button
+{
+    width: 100%;
+
+    padding: 12px;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+    border: none;
+
+    border-radius: 5px;
+
+    background-color: #1565c0;
+    color: white;
+}
+
+button:hover
+{
+    background-color: #0d47a1;
+}
+
+/* Machine State Colors */
+.state-idle
+{
+    color: green;
+}
+
+.state-running
+{
+    color: orange;
+}
+
+.state-wait
+{
+    color: red;
+}
+
+.state-complete
+{
+    color: blue;
+}
+
+/* Mobile Support */
+@media (max-width: 600px)
+{
+    body
+    {
+        margin: 10px;
+        padding: 10px;
+    }
+
+    h1
+    {
+        font-size: 24px;
+    }
+
+    button,
+    select
+    {
+        font-size: 18px;
+    }
+}

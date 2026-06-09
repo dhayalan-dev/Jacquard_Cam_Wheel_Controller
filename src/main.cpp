@@ -43,9 +43,8 @@ void loop()
 {
     webServerUpdate();
 
-    Serial.println("Start");
-    stepperMotorMoveOneCamPosition();
-    Serial.println("End");
-
+    Serial.print("Free Heap: ");
+    Serial.println(ESP.getFreeHeap());
+    
     delay(1000);
 }

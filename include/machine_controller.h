@@ -54,3 +54,8 @@ uint8_t machineControllerGetWheelIndex();
  * @brief Get current step index.
  */
 uint8_t machineControllerGetStepIndex();
+
+/**
+ * @brief Returns the current progress on the pattern
+ */
+uint8_t machineControllerGetProgress();

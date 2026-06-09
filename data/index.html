@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Jacquard Controller</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<script src="script.js"></script>
+
+<h1>Jacquard Controller</h1>
+
+<div class="status">
+    <h2>Status</h2>
+    <p id="state">--</p>
+    <p id="pattern">--</p>
+    <p id="wheel">--</p>
+    <p id="step">--</p>
+    <p id="progress">--</p>
+</div>
+
+<div class="pattern-container">
+    <h2>Pattern Selction</h2>
+
+    <select id="patterns"></select>
+
+    <button onclick="loadPattern()">
+    Load Pattern
+    </button>
+</div>
+
+</body>
+
+</html>

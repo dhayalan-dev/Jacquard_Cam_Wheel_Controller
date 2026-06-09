@@ -141,3 +141,12 @@ uint8_t machineControllerGetStepIndex()
 {
     return currentStep;
 }
+
+uint8_t machineControllerGetProgress()
+{
+    uint16_t completedSteps = (currentWheel * LOGICAL_PATTERN_STEPS) + currentStep;
+
+    uint16_t totalSteps = NO_OF_WHEELS * LOGICAL_PATTERN_STEPS;
+
+    return (completedSteps * 100) / totalSteps;
+}
