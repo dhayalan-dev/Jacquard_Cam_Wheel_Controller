@@ -109,6 +109,9 @@ void machineControllerUpdate()
     {
         currentRepeat = 0;
         currentState = MACHINE_STATE_WAIT_FOR_NEXT_WHEEL;
+
+        Serial.println("Wheel pattern completed");
+        Serial.println("Change next wheel");
     }
 
     if(currentWheel >= NO_OF_WHEELS)

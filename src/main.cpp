@@ -42,9 +42,13 @@ void setup()
         while(1);
     }
 
-    machineControllerLoadPattern("Heart");
+    machineControllerLoadPattern(
+        patternRegistryGetFileName(1)
+    );
 
     delay(100);
+
+    delay(3000); // Initial delay to let the system stabilize
 
     machineControllerStart();
 

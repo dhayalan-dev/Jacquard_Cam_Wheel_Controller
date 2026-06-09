@@ -118,7 +118,7 @@ static void handleStatus()
 
     /* Current wheel data */
     json += "\"wheel\":";
-    json += String(machineControllerGetWheelIndex()); json += ",";
+    json += String(machineControllerGetWheelIndex() + 1); json += ",";
 
     /* Current step data */
     json += "\"step\":";
