@@ -18,7 +18,8 @@ function parsePattern(bytes)
             byteIndex < BYTES_PER_WHEEL;
             byteIndex++)
         {
-            const value = bytes[wheelOffset + byteIndex];
+            const value =
+                bytes[wheelOffset + byteIndex];
 
             for(let bitIndex = 0;
                 bitIndex < 8;
@@ -30,22 +31,24 @@ function parsePattern(bytes)
             }
         }
 
+        // Trim extra bits from last byte
         wheelBits.length = STEPS_PER_WHEEL;
 
         wheels.push(wheelBits);
     }
 
-    const repeat = bytes[bytes.length - 1];
+    const repeat =
+        bytes[bytes.length - 1];
 
     return {
-        wheels,
-        repeat
+        wheels: wheels,
+        repeat: repeat
     };
 }
 
 function renderPattern()
 {
-    if(currentPattern == null)
+    if(currentPattern === null)
     {
         return;
     }
@@ -60,22 +63,25 @@ function renderPattern()
     currentPattern.wheels.forEach(
         (wheel, index) =>
         {
-            const row = document.createElement("div");
+            const row =
+                document.createElement("div");
 
-            row.className = "wheel-row";
+            row.className =
+                "wheel-row";
+
+            const wheelNumber =
+                String(index + 1)
+                .padStart(2, '0');
 
             row.innerHTML =
                 "<strong>Wheel "
-                + (index + 1)
+                + wheelNumber
                 + ":</strong> "
                 + wheel.map(
-                    bit =>
-                    bit ? "█" : "·"
+                    bit => bit ? "█" : "."
                 ).join("");
 
-            container.appendChild(
-                row
-            );
+            container.appendChild(row);
         }
     );
 }
@@ -95,20 +101,6 @@ async function loadPatternBinary()
         currentPattern = parsePattern(bytes);
 
         renderPattern();
-
-        console.log(
-            "Repeat:", pattern.repeat
-        );
-
-        console.log(
-            "Wheel 0:",
-            pattern.wheels[0].join('')
-        );
-
-        console.log(
-            "Wheel 1:",
-            pattern.wheels[1].join('')
-        );
     }
     catch(error)
     {
