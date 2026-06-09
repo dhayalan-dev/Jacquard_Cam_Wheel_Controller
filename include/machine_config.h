@@ -67,7 +67,7 @@
  *
  */
 
-#define BASE_MICROSTEPS_PER_CAM_POSITION 44
+#define BASE_MICROSTEPS_PER_CAM_POSITION 16 // 16 = 0.9 degrees, 44 = 2.5 degrees
 
 #define EXTRA_MICROSTEP_INTERVAL 3
 
@@ -76,6 +76,6 @@
  * ============================================================
  */
 
-#define STEP_PULSE_HIGH_US 100
+#define STEP_PULSE_HIGH_US 500
 
-#define STEP_PULSE_LOW_US 100
+#define STEP_PULSE_LOW_US 500

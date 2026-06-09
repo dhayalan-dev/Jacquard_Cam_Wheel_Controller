@@ -6,32 +6,23 @@
 #pragma once
 
 #include "machine_config.h"
-#define STEP_PIN 18
-#define SLEEP_PIN 15
-#define RESET_PIN 14
+
+#define DIR_PIN     25
+#define STEP_PIN    26
+#define RST_PIN     14
+#define EN_PIN      13
 
 static_assert(
-    STEP_PIN == 18, "STEP_PIN must be defined as 18"
+    STEP_PIN == 26, "STEP_PIN must be defined as 26"
 );
-static_assert(
-    SLEEP_PIN == 15, "SLEEP_PIN must be defined as 15"
-);
-static_assert(
-    RESET_PIN == 14, "RESET_PIN must be defined as 14"
-);
+
+extern uint16_t totalSteps; // Contains the total steps moved
 
 /**
  * @brief Initializes the stepper motor control pins and state
  * @return true if initialization was successful, false otherwise
  */
 bool stepperMotorInit();
-
-/**
- * @brief Sets the stepper motor state to sleep or awake
- * @param sleep true to put the motor to sleep, false to awake
- * @return true if the operation was successful, false otherwise
- */
-bool stepperMotorSleep(bool sleep);
 
 /**
  * @brief Moves the stepper motor by a specified number of steps
@@ -47,7 +38,7 @@ bool stepperMotorStep(uint16_t steps);
 bool stepperMotorMoveOneCamPosition();
 
 /**
- * @brief Resets the stepper motor state
- * @return true if the operation was successful, false otherwise
+ * @brief Moves the stepper motor to the initial position
+ * @return true if returns to origin false otherwise
  */
-bool stepperMotorReset();
+bool stepperMotorOrigin();

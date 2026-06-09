@@ -1,6 +1,7 @@
 #include "web_server.h"
 #include "pattern_registry.h"
 #include "machine_controller.h"
+#include <SPIFFS.h>
 #include <WebServer.h>
 
 static WebServer server(80);

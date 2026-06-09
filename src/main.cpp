@@ -8,6 +8,7 @@
 #include "wifi_manager.h"
 #include "web_server.h"
 
+
 void setup()
 {
     Serial.begin(115200);
@@ -35,9 +36,16 @@ void setup()
         while(1);
     }
 
+
 }
 
 void loop()
 {
     webServerUpdate();
+
+    Serial.println("Start");
+    stepperMotorMoveOneCamPosition();
+    Serial.println("End");
+
+    delay(1000);
 }
