@@ -39,6 +39,8 @@ bool machineControllerLoadPattern(const char *filename)
         return false;
     }
 
+    Serial.printf("Loaded Pattern: %s\n", filename);
+
     currentPatternFile = filename;
 
     return true;

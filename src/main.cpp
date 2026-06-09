@@ -36,6 +36,17 @@ void setup()
         while(1);
     }
 
+    if (!machineControllerInit())
+    {
+        Serial.println("Failed to initialize the machien controller");
+        while(1);
+    }
+
+    machineControllerLoadPattern("Heart");
+
+    delay(100);
+
+    machineControllerStart();
 
 }
 
@@ -43,8 +54,7 @@ void loop()
 {
     webServerUpdate();
 
-    Serial.print("Free Heap: ");
-    Serial.println(ESP.getFreeHeap());
+    machineControllerUpdate();
     
-    delay(1000);
+    delay(100);
 }
