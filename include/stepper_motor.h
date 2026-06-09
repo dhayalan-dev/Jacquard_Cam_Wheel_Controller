@@ -16,8 +16,6 @@ static_assert(
     STEP_PIN == 26, "STEP_PIN must be defined as 26"
 );
 
-extern uint16_t totalSteps; // Contains the total steps moved
-
 /**
  * @brief Initializes the stepper motor control pins and state
  * @return true if initialization was successful, false otherwise
@@ -36,9 +34,3 @@ bool stepperMotorStep(uint16_t steps);
  * @return true if the operation was successful, false otherwise
  */
 bool stepperMotorMoveOneCamPosition();
-
-/**
- * @brief Moves the stepper motor to the initial position
- * @return true if returns to origin false otherwise
- */
-bool stepperMotorOrigin();
