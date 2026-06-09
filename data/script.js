@@ -1,18 +1,113 @@
+let currentPattern = null;
+
+function parsePattern(bytes)
+{
+    const wheels = [];
+
+    const BYTES_PER_WHEEL = 9;
+    const NO_OF_WHEELS = 18;
+    const STEPS_PER_WHEEL = 72;
+
+    for(let wheel = 0; wheel < NO_OF_WHEELS; wheel++)
+    {
+        const wheelBits = [];
+
+        const wheelOffset = wheel * BYTES_PER_WHEEL;
+
+        for(let byteIndex = 0;
+            byteIndex < BYTES_PER_WHEEL;
+            byteIndex++)
+        {
+            const value = bytes[wheelOffset + byteIndex];
+
+            for(let bitIndex = 0;
+                bitIndex < 8;
+                bitIndex++)
+            {
+                wheelBits.push(
+                    (value >> (7 - bitIndex)) & 0x01
+                );
+            }
+        }
+
+        wheelBits.length = STEPS_PER_WHEEL;
+
+        wheels.push(wheelBits);
+    }
+
+    const repeat = bytes[bytes.length - 1];
+
+    return {
+        wheels,
+        repeat
+    };
+}
+
+function renderPattern()
+{
+    if(currentPattern == null)
+    {
+        return;
+    }
+
+    const container =
+        document.getElementById(
+            "pattern-preview"
+        );
+
+    container.innerHTML = "";
+
+    currentPattern.wheels.forEach(
+        (wheel, index) =>
+        {
+            const row = document.createElement("div");
+
+            row.className = "wheel-row";
+
+            row.innerHTML =
+                "<strong>Wheel "
+                + (index + 1)
+                + ":</strong> "
+                + wheel.map(
+                    bit =>
+                    bit ? "█" : "·"
+                ).join("");
+
+            container.appendChild(
+                row
+            );
+        }
+    );
+}
+
 async function loadPatternBinary() 
 {
     try
     {
         const response = await fetch("/pattern");
         const buffer = await response.arrayBuffer();
+        const bytes = new Uint8Array(buffer); 
 
         console.log(
             "Pattern size:", buffer.byteLength, "bytes"
         );
 
-        const bytes = new Uint8Array(buffer);
+        currentPattern = parsePattern(bytes);
+
+        renderPattern();
 
         console.log(
-            "First 16 bytes:", Array.from(bytes.slice(0,16))
+            "Repeat:", pattern.repeat
+        );
+
+        console.log(
+            "Wheel 0:",
+            pattern.wheels[0].join('')
+        );
+
+        console.log(
+            "Wheel 1:",
+            pattern.wheels[1].join('')
         );
     }
     catch(error)
@@ -108,7 +203,7 @@ async function loadPattern()
         }
 
         await loadPatternBinary();
-        
+
         updateStatus();
     }
     catch(error)
@@ -120,9 +215,11 @@ async function loadPattern()
     }
 }
 
-window.onload = function()
+window.onload = async function()
 {
-    loadPatterns();
+    await loadPatterns();
+    await loadPatternBinary();
+
     updateStatus();
 
     setInterval(

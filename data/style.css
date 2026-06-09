@@ -120,3 +120,15 @@ button:hover
         font-size: 18px;
     }
 }
+
+.pattern-preview
+{
+    margin-top: 20px;
+}
+
+.wheel-row
+{
+    font-family: monospace;
+    white-space: nowrap;
+    margin-bottom: 4px;
+}
