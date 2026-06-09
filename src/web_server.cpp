@@ -227,6 +227,29 @@ static void handleJs()
     file.close();
 }
 
+static void handlePatternFile()
+{
+    const char* filename = machineControllerGetCurrentPatternFile();
+
+    if(filename == nullptr || strlen(filename) == 0)
+    {
+        server.send(404, "/text/plain", "No pattern loaded");
+        return;
+    }
+
+    File file = SPIFFS.open(filename, FILE_READ);
+
+    if(!file)
+    {
+        server.send(404, "text/plain", "Pattern file not found");
+        return;
+    }
+
+    server.streamFile(file, "application/octet-stream");
+
+    file.close();
+}
+
 /**
  * ===================Public Functions===================
  */
@@ -239,6 +262,7 @@ bool webServerInit()
     server.on("/status",    handleStatus);
     server.on("/select",    handlePatternSelect);
     server.on("/patterns",  handlePatterns);
+    server.on("/pattern", HTTP_GET, handlePatternFile);
 
     server.begin();
     Serial.println("Web Server Started");

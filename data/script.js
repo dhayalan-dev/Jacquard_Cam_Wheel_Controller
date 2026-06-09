@@ -1,3 +1,29 @@
+async function loadPatternBinary() 
+{
+    try
+    {
+        const response = await fetch("/pattern");
+        const buffer = await response.arrayBuffer();
+
+        console.log(
+            "Pattern size:", buffer.byteLength, "bytes"
+        );
+
+        const bytes = new Uint8Array(buffer);
+
+        console.log(
+            "First 16 bytes:", Array.from(bytes.slice(0,16))
+        );
+    }
+    catch(error)
+    {
+        console.error(
+            "Failed to load pattern",
+            error
+        );
+    }
+}
+
 async function updateStatus()
 {
     try
@@ -81,6 +107,8 @@ async function loadPattern()
             );
         }
 
+        await loadPatternBinary();
+        
         updateStatus();
     }
     catch(error)

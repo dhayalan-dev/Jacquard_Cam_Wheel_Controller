@@ -6,6 +6,8 @@
 
 static pattern_t currentPattern;
 
+static String currentPatternFile = "";
+
 static machine_state_e currentState = MACHINE_STATE_IDLE;
 
 static uint8_t currentWheel = 0;
@@ -30,10 +32,16 @@ bool machineControllerLoadPattern(const char *filename)
         return false;
     }
 
-    return loadPatternFromFile(
+    if(!loadPatternFromFile(
         filename,
-        currentPattern
-    );
+        currentPattern))
+    {
+        return false;
+    }
+
+    currentPatternFile = filename;
+
+    return true;
 }
 
 bool machineControllerStart()
@@ -149,4 +157,9 @@ uint8_t machineControllerGetProgress()
     uint16_t totalSteps = NO_OF_WHEELS * LOGICAL_PATTERN_STEPS;
 
     return (completedSteps * 100) / totalSteps;
+}
+
+const char* machineControllerGetCurrentPatternFile(void)
+{
+    return currentPatternFile.c_str();
 }
