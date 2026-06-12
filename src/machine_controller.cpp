@@ -6,6 +6,8 @@
 
 static pattern_t currentPattern;
 
+static String currentPatternFile = "";
+
 static machine_state_e currentState = MACHINE_STATE_IDLE;
 
 static uint8_t currentWheel = 0;
@@ -14,6 +16,7 @@ static uint8_t currentStep = 0;
 
 bool machineControllerInit()
 {
+    pinMode(SOLENOID_PIN, OUTPUT);
     currentState = MACHINE_STATE_IDLE;
 
     currentWheel = 0;
@@ -30,10 +33,18 @@ bool machineControllerLoadPattern(const char *filename)
         return false;
     }
 
-    return loadPatternFromFile(
+    if(!loadPatternFromFile(
         filename,
-        currentPattern
-    );
+        currentPattern))
+    {
+        return false;
+    }
+
+    Serial.printf("Loaded Pattern: %s\n", filename);
+
+    currentPatternFile = filename;
+
+    return true;
 }
 
 bool machineControllerStart()
@@ -59,14 +70,18 @@ bool machineControllerStop()
     return true;
 }
 
-static void _machineActuateSolenoid(bool state)
+static bool _machineActuateSolenoid(bool state)
 {
-    /*
-     * TODO:
-     * drive solenoid output
-     */
+    Serial.print(
+        state ? "#" : "."
+    );
+    
+    digitalWrite(
+        SOLENOID_PIN,
+        state ? HIGH : LOW
+    );
 
-    Serial.print(state ? "#" : ".");
+    return true;
 }
 
 void machineControllerUpdate()
@@ -82,10 +97,12 @@ void machineControllerUpdate()
             currentStep
         );
 
-    _machineActuateSolenoid(bitValue);
+    if(!_machineActuateSolenoid(bitValue))
+    {
+        return;
+    }
 
     stepperMotorMoveOneCamPosition();
-
     currentStep++;
 
     if(currentStep >= LOGICAL_PATTERN_STEPS)
@@ -99,6 +116,9 @@ void machineControllerUpdate()
     {
         currentRepeat = 0;
         currentState = MACHINE_STATE_WAIT_FOR_NEXT_WHEEL;
+
+        Serial.println("Wheel pattern completed");
+        Serial.println("Change next wheel");
     }
 
     if(currentWheel >= NO_OF_WHEELS)
@@ -149,4 +169,9 @@ uint8_t machineControllerGetProgress()
     uint16_t totalSteps = NO_OF_WHEELS * LOGICAL_PATTERN_STEPS;
 
     return (completedSteps * 100) / totalSteps;
+}
+
+const char* machineControllerGetCurrentPatternFile(void)
+{
+    return currentPatternFile.c_str();
 }

@@ -59,3 +59,8 @@ uint8_t machineControllerGetStepIndex();
  * @brief Returns the current progress on the pattern
  */
 uint8_t machineControllerGetProgress();
+
+/**
+ * @brief Returns the current pattern file
+ */
+const char* machineControllerGetCurrentPatternFile(void);
