@@ -16,6 +16,7 @@ static uint8_t currentStep = 0;
 
 bool machineControllerInit()
 {
+    pinMode(SOLENOID_PIN, OUTPUT);
     currentState = MACHINE_STATE_IDLE;
 
     currentWheel = 0;
@@ -69,14 +70,18 @@ bool machineControllerStop()
     return true;
 }
 
-static void _machineActuateSolenoid(bool state)
+static bool _machineActuateSolenoid(bool state)
 {
-    /*
-     * TODO:
-     * drive solenoid output
-     */
+    Serial.print(
+        state ? "#" : "."
+    );
+    
+    digitalWrite(
+        SOLENOID_PIN,
+        state ? HIGH : LOW
+    );
 
-    Serial.print(state ? "#" : ".");
+    return true;
 }
 
 void machineControllerUpdate()
@@ -92,10 +97,12 @@ void machineControllerUpdate()
             currentStep
         );
 
-    _machineActuateSolenoid(bitValue);
+    if(!_machineActuateSolenoid(bitValue))
+    {
+        return;
+    }
 
     stepperMotorMoveOneCamPosition();
-
     currentStep++;
 
     if(currentStep >= LOGICAL_PATTERN_STEPS)

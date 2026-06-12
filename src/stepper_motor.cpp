@@ -1,10 +1,5 @@
 #include "stepper_motor.h"
 #include "machine_config.h"
-#include <Preferences.h>
-
-uint16_t totalSteps = 0;
-
-Preferences _pref;
 
 bool stepperMotorInit()
 {
@@ -19,12 +14,6 @@ bool stepperMotorInit()
     digitalWrite(STEP_PIN,  LOW);
 
     delay(5); // Allow time for the motor to initialize
-
-    _pref.begin("stepper", false);
-
-    totalSteps = _pref.getUInt("steps", 0);
-
-    stepperMotorOrigin();
 
     return true;
 }
@@ -42,11 +31,6 @@ bool stepperMotorStep(uint16_t microsteps)
         digitalWrite(STEP_PIN, LOW);
         delayMicroseconds(STEP_PULSE_LOW_US);
     }
-
-    /* Calculate the total steps moved, if total steps exceed 6400 reset back to zero */
-    (totalSteps >= 6400 ? totalSteps = 0 : totalSteps += microsteps);
-
-    _pref.putUInt("steps", totalSteps);
 
     return true;
 }
@@ -66,13 +50,3 @@ bool stepperMotorMoveOneCamPosition()
     return stepperMotorStep(requiredMicrosteps);
 }
 
-bool stepperMotorOrigin()
-{
-    if (totalSteps == 0) return true;
-
-    digitalWrite(DIR_PIN, LOW);
-    stepperMotorStep(totalSteps);
-
-    digitalWrite(DIR_PIN, HIGH);
-    return true;
-}

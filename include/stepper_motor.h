@@ -16,8 +16,6 @@ static_assert(
     STEP_PIN == 26, "STEP_PIN must be defined as 26"
 );
 
-extern uint16_t totalSteps; // Contains the total steps moved
-
 /**
  * @brief Initializes the stepper motor control pins and state
  * @return true if initialization was successful, false otherwise
