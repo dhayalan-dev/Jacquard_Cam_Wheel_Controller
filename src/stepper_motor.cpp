@@ -49,3 +49,9 @@ bool stepperMotorMoveOneCamPosition()
 
     return stepperMotorStep(requiredMicrosteps);
 }
+
+bool stepperMotorStop()
+{
+    digitalWrite(EN_PIN, HIGH);
+    return true;
+}

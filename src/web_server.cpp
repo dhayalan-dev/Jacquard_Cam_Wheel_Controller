@@ -96,6 +96,10 @@ static void handleStatus()
         case MACHINE_STATE_IDLE:
             json += "IDLE";
             break;
+
+        case MACHINE_STATE_READY:
+            json += "READY";
+            break;
         
         case MACHINE_STATE_RUNNING:
             json += "RUNNING";
@@ -227,6 +231,61 @@ static void handleJs()
     file.close();
 }
 
+static void handlePatternFile()
+{
+    const char* filename = machineControllerGetCurrentPatternFile();
+
+    if(filename == nullptr || strlen(filename) == 0)
+    {
+        server.send(404, "/text/plain", "No pattern loaded");
+        return;
+    }
+
+    File file = SPIFFS.open(filename, FILE_READ);
+
+    if(!file)
+    {
+        server.send(404, "text/plain", "Pattern file not found");
+        return;
+    }
+
+    server.streamFile(file, "application/octet-stream");
+
+    file.close();
+}
+
+static void handleStart()
+{
+    if(machineControllerStart())
+    {
+        Serial.println("start received from web");
+        server.send(
+            200,
+            "text/plain",
+            "Machine Started"
+        );
+    }
+    else
+    {
+        server.send(
+            400,
+            "text/plain",
+            "Machine Not Ready"
+        );
+    }
+}
+
+static void handleAbort()
+{
+    machineControllerAbort();
+
+    server.send(
+        200,
+        "text/plain",
+        "Aborted"
+    );
+}
+
 /**
  * ===================Public Functions===================
  */
@@ -239,6 +298,9 @@ bool webServerInit()
     server.on("/status",    handleStatus);
     server.on("/select",    handlePatternSelect);
     server.on("/patterns",  handlePatterns);
+    server.on("/pattern", HTTP_GET, handlePatternFile);
+    server.on("/start", handleStart);
+    server.on("/abort", handleAbort);
 
     server.begin();
     Serial.println("Web Server Started");

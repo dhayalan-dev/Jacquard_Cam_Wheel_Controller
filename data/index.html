@@ -2,34 +2,96 @@
 <html>
 
 <head>
+    <head>
+    <meta charset="UTF-8">
     <title>Jacquard Controller</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+<div class="header">
+    <h1>Jacquard Controller</h1>
+    <p class="subtitle">ESP32 Jacquard Cam Wheel Controller</p>
+</div>
+
+<div class="dashboard">
+
+    <div class="status-grid">
+
+        <div class="status-card">
+            <h3>State</h3>
+            <p id="state">--</p>
+        </div>
+
+        <div class="status-card">
+            <h3>Pattern</h3>
+            <p id="pattern">--</p>
+        </div>
+
+        <div class="status-card">
+            <h3>Wheel</h3>
+            <p id="wheel">--</p>
+        </div>
+
+        <div class="status-card">
+            <h3>Step</h3>
+            <p id="step">--</p>
+        </div>
+
+        <div class="status-card">
+            <h3>Progress</h3>
+            <p id="progress">0%</p>
+
+            <div class="progress-bar">
+                <div id="progress-fill"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="control-panel">
+
+        <h2>Pattern Control</h2>
+
+        <select id="patterns"></select>
+
+        <button
+            id="load-button"
+            onclick="loadPattern()">
+            Load Pattern
+        </button>
+
+        <div class="button-row">
+
+            <button
+                id="start-button"
+                onclick="startMachine()">
+                Start
+            </button>
+
+            <button
+                id="abort-button"
+                onclick="abortMachine()">
+                Abort
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="preview-panel">
+
+        <h2>Pattern Preview</h2>
+
+        <div id="pattern-preview">
+            No Pattern Loaded
+        </div>
+
+    </div>
+
+</div>
+
 <script src="script.js"></script>
-
-<h1>Jacquard Controller</h1>
-
-<div class="status">
-    <h2>Status</h2>
-    <p id="state">--</p>
-    <p id="pattern">--</p>
-    <p id="wheel">--</p>
-    <p id="step">--</p>
-    <p id="progress">--</p>
-</div>
-
-<div class="pattern-container">
-    <h2>Pattern Selction</h2>
-
-    <select id="patterns"></select>
-
-    <button onclick="loadPattern()">
-    Load Pattern
-    </button>
-</div>
-
 </body>
 
 </html>

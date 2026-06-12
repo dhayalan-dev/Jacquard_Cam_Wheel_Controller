@@ -34,3 +34,9 @@ bool stepperMotorStep(uint16_t steps);
  * @return true if the operation was successful, false otherwise
  */
 bool stepperMotorMoveOneCamPosition();
+
+/**
+ * @brief Stops the stepper motor
+ * @return True if operation successful, false otherwise
+ */
+bool stepperMotorStop();

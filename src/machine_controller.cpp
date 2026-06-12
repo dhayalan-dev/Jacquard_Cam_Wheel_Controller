@@ -16,7 +16,6 @@ static uint8_t currentStep = 0;
 
 bool machineControllerInit()
 {
-    pinMode(SOLENOID_PIN, OUTPUT);
     currentState = MACHINE_STATE_IDLE;
 
     currentWheel = 0;
@@ -40,23 +39,23 @@ bool machineControllerLoadPattern(const char *filename)
         return false;
     }
 
-    Serial.printf("Loaded Pattern: %s\n", filename);
+    currentWheel = 0;
+    currentStep = 0;
+    currentRepeat = 0;
 
     currentPatternFile = filename;
+    currentState = MACHINE_STATE_READY;
 
     return true;
 }
 
 bool machineControllerStart()
 {
-    if(currentState == MACHINE_STATE_RUNNING)
+    if(currentState != MACHINE_STATE_READY &&
+       currentState != MACHINE_STATE_WAIT_FOR_NEXT_WHEEL)
     {
         return false;
     }
-
-    currentWheel = 0;
-    currentRepeat = 0;
-    currentStep = 0;
 
     currentState = MACHINE_STATE_RUNNING;
 
@@ -65,23 +64,26 @@ bool machineControllerStart()
 
 bool machineControllerStop()
 {
+    stepperMotorStop();
     currentState = MACHINE_STATE_IDLE;
 
     return true;
 }
 
-static bool _machineActuateSolenoid(bool state)
+void machineControllerAbort()
 {
-    Serial.print(
-        state ? "#" : "."
-    );
-    
-    digitalWrite(
-        SOLENOID_PIN,
-        state ? HIGH : LOW
-    );
+    stepperMotorStop();
+    currentState = MACHINE_STATE_ABORTED;
+}
 
-    return true;
+static void _machineActuateSolenoid(bool state)
+{
+    /*
+     * TODO:
+     * drive solenoid output
+     */
+
+    Serial.print(state ? "#" : ".");
 }
 
 void machineControllerUpdate()
@@ -97,12 +99,10 @@ void machineControllerUpdate()
             currentStep
         );
 
-    if(!_machineActuateSolenoid(bitValue))
-    {
-        return;
-    }
+    _machineActuateSolenoid(bitValue);
 
     stepperMotorMoveOneCamPosition();
+
     currentStep++;
 
     if(currentStep >= LOGICAL_PATTERN_STEPS)
@@ -116,9 +116,6 @@ void machineControllerUpdate()
     {
         currentRepeat = 0;
         currentState = MACHINE_STATE_WAIT_FOR_NEXT_WHEEL;
-
-        Serial.println("Wheel pattern completed");
-        Serial.println("Change next wheel");
     }
 
     if(currentWheel >= NO_OF_WHEELS)
@@ -164,11 +161,17 @@ uint8_t machineControllerGetStepIndex()
 
 uint8_t machineControllerGetProgress()
 {
-    uint16_t completedSteps = (currentWheel * LOGICAL_PATTERN_STEPS) + currentStep;
+    uint32_t completedSteps = (
+    (
+        currentWheel * currentPattern.repeat
+    ) + currentRepeat) * STEPS_PER_WHEEL + currentStep;
 
-    uint16_t totalSteps = NO_OF_WHEELS * LOGICAL_PATTERN_STEPS;
+    uint32_t totalSteps =
+        NO_OF_WHEELS * currentPattern.repeat * STEPS_PER_WHEEL;
 
-    return (completedSteps * 100) / totalSteps;
+    if(totalSteps == 0) return 0;
+
+    return (uint8_t)((completedSteps * 100UL) / totalSteps);
 }
 
 const char* machineControllerGetCurrentPatternFile(void)

@@ -9,9 +9,11 @@ enum machine_state_e
 {
     MACHINE_STATE_IDLE = 0,
     MACHINE_STATE_RUNNING,
+    MACHINE_STATE_READY,
     MACHINE_STATE_WAIT_FOR_NEXT_WHEEL,
     MACHINE_STATE_COMPLETED,
-    MACHINE_STATE_ERROR
+    MACHINE_STATE_ERROR,
+    MACHINE_STATE_ABORTED
 };
 
 
@@ -34,6 +36,11 @@ bool machineControllerStart();
  * @brief Stop current execution.
  */
 bool machineControllerStop();
+
+/**
+ * @brief Abort the current execution
+ */
+void machineControllerAbort();
 
 /**
  * @brief Machine state handler.

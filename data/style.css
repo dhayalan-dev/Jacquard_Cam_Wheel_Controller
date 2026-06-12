@@ -1,122 +1,241 @@
-/* General Page */
 body
 {
+    margin: 0;
+
+    background: #10141c;
+
+    color: #f1f5f9;
+
     font-family: Arial, sans-serif;
-    max-width: 800px;
-    margin: 20px auto;
+}
+
+.header
+{
     padding: 20px;
 
-    background-color: #f5f5f5;
-    color: #222;
-}
-
-/* Main Title */
-h1
-{
     text-align: center;
-    color: #1565c0;
+
+    background: #151b25;
+
+    border-bottom: 1px solid #293244;
 }
 
-/* Status Box */
-#status
+.header h1
 {
-    padding: 12px;
+    margin: 0;
+
+    font-size: 32px;
+}
+
+.subtitle
+{
+    color: #94a3b8;
+
+    margin-top: 5px;
+}
+
+.dashboard
+{
+    max-width: 1400px;
+
+    margin: auto;
+
+    padding: 20px;
+}
+
+.status-grid
+{
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(180px,1fr));
+
+    gap: 15px;
+
     margin-bottom: 20px;
+}
 
-    background-color: white;
+.status-card
+{
+    background: #1b2433;
 
-    border-left: 5px solid #1565c0;
+    border: 1px solid #293244;
+
+    border-radius: 10px;
+
+    padding: 15px;
+}
+
+.status-card h3
+{
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+
+    text-transform: uppercase;
+}
+
+.status-card p
+{
+    margin-top: 10px;
+
+    font-size: 24px;
 
     font-weight: bold;
 }
 
-/* Pattern Selection Area */
-.pattern-container
+.control-panel
 {
-    background-color: white;
+    background: #1b2433;
+
+    border: 1px solid #293244;
+
+    border-radius: 10px;
 
     padding: 20px;
 
-    border-radius: 8px;
-
-    box-shadow:
-        0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
 }
 
-/* Dropdown */
-select
+.control-panel h2
 {
-    width: 100%;
-
-    padding: 10px;
-
-    font-size: 16px;
-
-    margin-bottom: 15px;
+    margin-top: 0;
 }
 
-/* Buttons */
-button
+select
 {
     width: 100%;
 
     padding: 12px;
 
-    font-size: 16px;
+    margin-bottom: 15px;
 
-    cursor: pointer;
+    background: #10141c;
+
+    color: white;
+
+    border: 1px solid #293244;
+
+    border-radius: 6px;
+}
+
+.button-row
+{
+    display: flex;
+
+    gap: 10px;
+}
+
+button
+{
+    flex: 1;
+
+    padding: 12px;
 
     border: none;
 
-    border-radius: 5px;
+    border-radius: 6px;
 
-    background-color: #1565c0;
+    cursor: pointer;
+
+    font-size: 15px;
+
+    font-weight: bold;
+}
+
+#load-button
+{
+    width: 100%;
+
+    margin-bottom: 10px;
+
+    background: #2563eb;
+
+    color: white;
+}
+
+#start-button
+{
+    background: #16a34a;
+
+    color: white;
+}
+
+#abort-button
+{
+    background: #dc2626;
+
     color: white;
 }
 
 button:hover
 {
-    background-color: #0d47a1;
+    opacity: 0.9;
 }
 
-/* Machine State Colors */
-.state-idle
+button:disabled
 {
-    color: green;
+    background: #475569;
+
+    cursor: not-allowed;
+
+    opacity: 0.5;
 }
 
-.state-running
+.preview-panel
 {
-    color: orange;
+    background: #1b2433;
+
+    border: 1px solid #293244;
+
+    border-radius: 10px;
+
+    padding: 20px;
 }
 
-.state-wait
+.preview-panel h2
 {
-    color: red;
+    margin-top: 0;
 }
 
-.state-complete
+#pattern-preview
 {
-    color: blue;
+    overflow-x: auto;
+
+    font-family: monospace;
+
+    white-space: nowrap;
 }
 
-/* Mobile Support */
-@media (max-width: 600px)
+.wheel-row
 {
-    body
-    {
-        margin: 10px;
-        padding: 10px;
-    }
+    margin-bottom: 4px;
+}
 
-    h1
-    {
-        font-size: 24px;
-    }
+.progress-bar
+{
+    width: 100%;
 
-    button,
-    select
-    {
-        font-size: 18px;
-    }
+    height: 8px;
+
+    background: #293244;
+
+    border-radius: 4px;
+
+    overflow: hidden;
+
+    margin-top: 10px;
+}
+
+#progress-fill
+{
+    width: 0%;
+
+    height: 100%;
+
+    background: #16a34a;
+
+    transition: width 0.3s;
 }
