@@ -74,6 +74,7 @@ void machineControllerAbort()
 {
     stepperMotorStop();
     currentState = MACHINE_STATE_ABORTED;
+    stepperMotorEnable();
 }
 
 static void _machineActuateSolenoid(bool state)

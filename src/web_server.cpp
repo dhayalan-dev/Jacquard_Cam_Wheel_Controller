@@ -108,6 +108,10 @@ static void handleStatus()
         case MACHINE_STATE_WAIT_FOR_NEXT_WHEEL:
             json += "WAIT_FOR_NEXT_WHEEL";
             break;
+
+        case MACHINE_STATE_ABORTED:
+            json += "ABORT";
+            break;
         
         case MACHINE_STATE_COMPLETED:
             json += "COMPLETED";

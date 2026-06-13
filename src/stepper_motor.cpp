@@ -8,7 +8,7 @@ bool stepperMotorInit()
     pinMode(RST_PIN,    OUTPUT);
     pinMode(EN_PIN,     OUTPUT);
     
-    digitalWrite(EN_PIN,    LOW);
+    stepperMotorEnable();
     digitalWrite(DIR_PIN,   HIGH);
     digitalWrite(RST_PIN,   HIGH);
     digitalWrite(STEP_PIN,  LOW);
@@ -50,8 +50,16 @@ bool stepperMotorMoveOneCamPosition()
     return stepperMotorStep(requiredMicrosteps);
 }
 
+bool stepperMotorEnable()
+{
+    digitalWrite(EN_PIN, LOW);
+    Serial.println("Enabled");
+    return true;
+}
+
 bool stepperMotorStop()
 {
     digitalWrite(EN_PIN, HIGH);
+    Serial.println("Aborted");
     return true;
 }

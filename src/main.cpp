@@ -36,15 +36,11 @@ void setup()
         while(1);
     }
 
-
 }
 
 void loop()
 {
     webServerUpdate();
-
-    Serial.print("Free Heap: ");
-    Serial.println(ESP.getFreeHeap());
     
     delay(1000);
 }

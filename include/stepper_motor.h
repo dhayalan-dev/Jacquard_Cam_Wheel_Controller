@@ -36,6 +36,12 @@ bool stepperMotorStep(uint16_t steps);
 bool stepperMotorMoveOneCamPosition();
 
 /**
+ * @brief Enables the stepper motor
+ * @return True if operation successful, false otherwise
+ */
+bool stepperMotorEnable();
+
+/**
  * @brief Stops the stepper motor
  * @return True if operation successful, false otherwise
  */

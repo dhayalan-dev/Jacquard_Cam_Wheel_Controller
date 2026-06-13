@@ -304,6 +304,32 @@ async function startMachine()
     }
 }
 
+async function abortMachine()
+{
+    try
+    {
+        const response =
+            await fetch(
+                "/abort"
+            );
+
+        if(!response.ok)
+        {
+            throw new Error(
+                "Failed to abort machine"
+            );
+        }
+
+        updateStatus();
+    }
+    catch(error)
+    {
+        console.error(
+            error
+        );
+    }
+}
+
 window.onload = async function()
 {
     await loadPatterns();
