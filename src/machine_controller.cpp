@@ -55,13 +55,44 @@ bool machineControllerStart()
         return false;
     }
 
-    currentWheel = 0;
-    currentRepeat = 0;
-    currentStep = 0;
+    if(currentState == MACHINE_STATE_READY)
+    {
+        currentWheel = 0;
+        currentRepeat = 0;
+        currentStep = 0;
 
-    currentState = MACHINE_STATE_RUNNING;
+        currentState = MACHINE_STATE_RUNNING;
 
-    return true;
+        return true;
+    }
+
+    if(currentState == MACHINE_STATE_WAIT_FOR_NEXT_WHEEL)
+    {
+        currentWheel++;
+
+        if(currentWheel >= NO_OF_WHEELS)
+        {
+            currentState =
+                MACHINE_STATE_COMPLETED;
+
+            return true;
+        }
+
+        currentRepeat = 0;
+        currentStep = 0;
+
+        currentState =
+            MACHINE_STATE_RUNNING;
+
+        Serial.printf(
+            "Starting Wheel %d\n",
+            currentWheel + 1
+        );
+
+        return true;
+    }
+
+    return false;
 }
 
 bool machineControllerStop()
@@ -118,8 +149,13 @@ void machineControllerUpdate()
         currentRepeat = 0;
         currentState = MACHINE_STATE_WAIT_FOR_NEXT_WHEEL;
 
+        stepperMotorStop();
+
         Serial.println("Wheel pattern completed");
-        Serial.println("Change next wheel");
+
+        Serial.println("Change next wheel and press Start");
+
+        return;
     }
 
     if(currentWheel >= NO_OF_WHEELS)
@@ -127,25 +163,6 @@ void machineControllerUpdate()
         currentState = MACHINE_STATE_COMPLETED;
         Serial.println("\nPattern Complete");
     }
-}
-
-bool machineControllerNextWheel()
-{
-    if (currentState != MACHINE_STATE_WAIT_FOR_NEXT_WHEEL)
-    {
-        return false;
-    }
-
-    currentWheel++;
-
-    if(currentWheel >= NO_OF_WHEELS)
-    {
-        currentState = MACHINE_STATE_COMPLETED;
-        return true;
-    }
-
-    currentState = MACHINE_STATE_RUNNING;
-    return true;
 }
 
 machine_state_e machineControllerGetState()
