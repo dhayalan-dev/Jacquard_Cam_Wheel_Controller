@@ -61,6 +61,7 @@ bool machineControllerStart()
         currentRepeat = 0;
         currentStep = 0;
 
+        stepperMotorEnable();
         currentState = MACHINE_STATE_RUNNING;
 
         return true;
@@ -84,6 +85,8 @@ bool machineControllerStart()
         currentState =
             MACHINE_STATE_RUNNING;
 
+        stepperMotorEnable();
+
         Serial.printf(
             "Starting Wheel %d\n",
             currentWheel + 1
@@ -97,9 +100,26 @@ bool machineControllerStart()
 
 bool machineControllerStop()
 {
+    digitalWrite(SOLENOID_PIN, LOW);
+
+    stepperMotorStop();
     currentState = MACHINE_STATE_IDLE;
 
     return true;
+}
+
+void machineControllerAbort()
+{
+    digitalWrite(SOLENOID_PIN, LOW);
+
+    stepperMotorStop();
+
+    currentWheel  = 0;
+    currentRepeat = 0;
+    currentStep   = 0;
+
+    currentState = MACHINE_STATE_ABORTED;
+
 }
 
 static bool _machineActuateSolenoid(bool state)
@@ -157,12 +177,6 @@ void machineControllerUpdate()
 
         return;
     }
-
-    if(currentWheel >= NO_OF_WHEELS)
-    {
-        currentState = MACHINE_STATE_COMPLETED;
-        Serial.println("\nPattern Complete");
-    }
 }
 
 machine_state_e machineControllerGetState()
@@ -182,9 +196,17 @@ uint8_t machineControllerGetStepIndex()
 
 uint8_t machineControllerGetProgress()
 {
-    uint16_t completedSteps = (currentWheel * LOGICAL_PATTERN_STEPS) + currentStep;
+    uint32_t completedSteps =
+    (
+        (
+            currentWheel * currentPattern.repeat
+        ) + currentRepeat
+    ) * LOGICAL_PATTERN_STEPS + currentStep;
 
-    uint16_t totalSteps = NO_OF_WHEELS * LOGICAL_PATTERN_STEPS;
+    uint32_t totalSteps =
+        NO_OF_WHEELS *
+        currentPattern.repeat *
+        LOGICAL_PATTERN_STEPS;
 
     return (completedSteps * 100) / totalSteps;
 }
