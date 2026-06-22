@@ -126,11 +126,19 @@ static void handleStatus()
 
     /* Current wheel data */
     json += "\"wheel\":";
-    json += String(machineControllerGetWheelIndex()); json += ",";
+    json += String(machineControllerGetWheelIndex() + 1); json += ",";
+
+    /* Total wheels */
+    json += "\"totalWheels\":";
+    json += String(NO_OF_WHEELS); json += ",";
 
     /* Current step data */
     json += "\"step\":";
-    json += String(machineControllerGetStepIndex()); json += ",";
+    json += String(machineControllerGetStepIndex() + 1); json += ",";
+
+    /* Total steps */
+    json += "\"totalSteps\":";
+    json += String(STEPS_PER_WHEEL * 2); json += ",";
 
     /* Progress */
     json += "\"progress\":";

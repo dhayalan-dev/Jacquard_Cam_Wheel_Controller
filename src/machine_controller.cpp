@@ -17,6 +17,8 @@ static uint8_t currentStep = 0;
 bool machineControllerInit()
 {
     pinMode(SOLENOID_PIN, OUTPUT);
+    digitalWrite(SOLENOID_PIN, HIGH);
+
     currentState = MACHINE_STATE_IDLE;
 
     currentWheel = 0;
@@ -50,6 +52,17 @@ bool machineControllerLoadPattern(const char *filename)
 
 bool machineControllerStart()
 {
+    if(currentState == MACHINE_STATE_IDLE)
+    {
+        currentState = MACHINE_STATE_RUNNING;
+        Serial.printf(
+            "Starting Wheel %d\n",
+            currentWheel + 1
+        );
+
+        return true;
+    }
+
     if(currentState == MACHINE_STATE_RUNNING)
     {
         return false;
@@ -100,7 +113,7 @@ bool machineControllerStart()
 
 bool machineControllerStop()
 {
-    digitalWrite(SOLENOID_PIN, LOW);
+    digitalWrite(SOLENOID_PIN, HIGH);
 
     stepperMotorStop();
     currentState = MACHINE_STATE_IDLE;
@@ -110,7 +123,7 @@ bool machineControllerStop()
 
 void machineControllerAbort()
 {
-    digitalWrite(SOLENOID_PIN, LOW);
+    digitalWrite(SOLENOID_PIN, HIGH);
 
     stepperMotorStop();
 
@@ -130,8 +143,9 @@ static bool _machineActuateSolenoid(bool state)
     
     digitalWrite(
         SOLENOID_PIN,
-        state ? HIGH : LOW
+        state ? LOW : HIGH
     );
+    delay(10);
 
     return true;
 }
@@ -191,7 +205,7 @@ uint8_t machineControllerGetWheelIndex()
 
 uint8_t machineControllerGetStepIndex()
 {
-    return currentStep;
+    return ( (currentRepeat == 1) ? (LOGICAL_PATTERN_STEPS + currentStep) : currentStep );
 }
 
 uint8_t machineControllerGetProgress()
@@ -207,6 +221,8 @@ uint8_t machineControllerGetProgress()
         NO_OF_WHEELS *
         currentPattern.repeat *
         LOGICAL_PATTERN_STEPS;
+
+    if(completedSteps == 0) return 0;
 
     return (completedSteps * 100) / totalSteps;
 }

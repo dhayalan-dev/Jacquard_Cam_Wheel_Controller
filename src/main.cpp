@@ -16,17 +16,25 @@ void setup()
 
     if(!wifiManagerInit())
     {
+        Serial.println("Failed to initialize Wi-Fi");
         while (1);
     }
 
     if(!webServerInit())
     {
+        Serial.println("Failed to initialize web server");
         while (1);
     }
 
     if(!initPatternFS())
     {
         Serial.println("Failed to initialize pattern file system");
+        while(1);
+    }
+
+    if (!machineControllerInit())
+    {
+        Serial.println("Failed to initialize machine controller");
         while(1);
     }
     
@@ -41,6 +49,7 @@ void setup()
 void loop()
 {
     webServerUpdate();
+    machineControllerUpdate();
     
-    delay(1000);
+    delay(100);
 }
