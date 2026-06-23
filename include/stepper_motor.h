@@ -7,13 +7,11 @@
 
 #include "machine_config.h"
 
-#define DIR_PIN     25
-#define STEP_PIN    26
-#define RST_PIN     14
-#define EN_PIN      13
-
 static_assert(
-    STEP_PIN == 26, "STEP_PIN must be defined as 26"
+    STEP_PIN_1 == 26, "STEP_PIN_1 must be defined as 26"
+);
+static_assert(
+    EN_PIN_1 == 13, "EN_PIN_1 must be defined as 13"
 );
 
 /**

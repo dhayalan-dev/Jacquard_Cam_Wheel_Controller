@@ -67,7 +67,7 @@
  *
  */
 
-#define BASE_MICROSTEPS_PER_CAM_POSITION 16 // 16 = 0.9 degrees, 44 = 2.5 degrees
+#define BASE_MICROSTEPS_PER_CAM_POSITION 44 // 44 = 2.5 degrees
 
 #define EXTRA_MICROSTEP_INTERVAL 3
 
@@ -77,8 +77,20 @@
  */
 
 #define STEP_PULSE_HIGH_US 500
-
 #define STEP_PULSE_LOW_US 500
 
-/* PIN DEFINITIONS */
-#define SOLENOID_PIN 18
+#define SOLENOID_ACTUATION_DELAY_MS 10 
+
+/* PIN DEFINITIONS 
+ * Pattern Setter */
+#define STEP_PIN_1    26
+#define EN_PIN_1      13
+
+#define SOLENOID_PIN_1 14
+
+/* PIN DEFINITIONS 
+ * Pattern Resetter */
+#define STEP_PIN_2    21
+#define EN_PIN_2      19
+
+#define SOLENOID_PIN_2 18

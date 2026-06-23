@@ -330,6 +330,13 @@ async function abortMachine()
     }
 }
 
+async function resetMachine()
+{
+    await fetch("/reset", {
+        method: "POST"
+    });
+}
+
 window.onload = async function()
 {
     await loadPatterns();

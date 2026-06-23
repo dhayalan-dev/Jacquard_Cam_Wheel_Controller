@@ -16,8 +16,8 @@ static uint8_t currentStep = 0;
 
 bool machineControllerInit()
 {
-    pinMode(SOLENOID_PIN, OUTPUT);
-    digitalWrite(SOLENOID_PIN, HIGH);
+    pinMode(SOLENOID_PIN_1, OUTPUT);
+    digitalWrite(SOLENOID_PIN_1, HIGH);
 
     currentState = MACHINE_STATE_IDLE;
 
@@ -113,7 +113,7 @@ bool machineControllerStart()
 
 bool machineControllerStop()
 {
-    digitalWrite(SOLENOID_PIN, HIGH);
+    digitalWrite(SOLENOID_PIN_1, HIGH);
 
     stepperMotorStop();
     currentState = MACHINE_STATE_IDLE;
@@ -123,7 +123,7 @@ bool machineControllerStop()
 
 void machineControllerAbort()
 {
-    digitalWrite(SOLENOID_PIN, HIGH);
+    digitalWrite(SOLENOID_PIN_1, HIGH);
 
     stepperMotorStop();
 
@@ -142,7 +142,7 @@ static bool _machineActuateSolenoid(bool state)
     );
     
     digitalWrite(
-        SOLENOID_PIN,
+        SOLENOID_PIN_1,
         state ? LOW : HIGH
     );
     delay(10);

@@ -1,6 +1,7 @@
 #include "web_server.h"
 #include "pattern_registry.h"
 #include "machine_controller.h"
+#include "reset_controller.h"
 #include <SPIFFS.h>
 #include <WebServer.h>
 
@@ -298,6 +299,18 @@ static void handleAbort()
     );
 }
 
+static void handleReset()
+{
+    if(resetControllerStart())
+    {
+        server.send(200, "text/plain", "Reset Started");
+    }
+    else
+    {
+        server.send(400, "text/plain", "Reset Busy");
+    }
+}
+
 /**
  * ===================Public Functions===================
  */
@@ -313,6 +326,7 @@ bool webServerInit()
     server.on("/pattern", HTTP_GET, handlePatternFile);
     server.on("/start", handleStart);
     server.on("/abort", handleAbort);
+    server.on("/reset", HTTP_POST, handleReset);
 
     server.begin();
     Serial.println("Web Server Started");

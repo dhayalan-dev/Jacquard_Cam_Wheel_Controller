@@ -7,6 +7,7 @@
 #include "pattern_registry.h"
 #include "wifi_manager.h"
 #include "web_server.h"
+#include "reset_controller.h"
 
 
 void setup()
@@ -44,12 +45,19 @@ void setup()
         while(1);
     }
 
+    if(!resetControllerInit())
+    {
+        Serial.println("Failed to initialize reset controller");
+        while(1);
+    }
+
 }
 
 void loop()
 {
     webServerUpdate();
     machineControllerUpdate();
+    resetControllerUpdate();
     
     delay(100);
 }

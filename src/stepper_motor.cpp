@@ -3,15 +3,11 @@
 
 bool stepperMotorInit()
 {
-    pinMode(DIR_PIN,    OUTPUT);
-    pinMode(STEP_PIN,   OUTPUT);
-    pinMode(RST_PIN,    OUTPUT);
-    pinMode(EN_PIN,     OUTPUT);
+    pinMode(STEP_PIN_1,   OUTPUT);
+    pinMode(EN_PIN_1,     OUTPUT);
     
     stepperMotorEnable();
-    digitalWrite(DIR_PIN,   HIGH);
-    digitalWrite(RST_PIN,   HIGH);
-    digitalWrite(STEP_PIN,  LOW);
+    digitalWrite(STEP_PIN_1,  LOW);
 
     delay(5); // Allow time for the motor to initialize
 
@@ -24,11 +20,11 @@ bool stepperMotorStep(uint16_t microsteps)
     for(uint16_t i = 0; i < microsteps; i++)
     {
         // Generate one DRV8825 step pulse
-        digitalWrite(STEP_PIN, HIGH);
+        digitalWrite(STEP_PIN_1, HIGH);
         delayMicroseconds(STEP_PULSE_HIGH_US);
 
 
-        digitalWrite(STEP_PIN, LOW);
+        digitalWrite(STEP_PIN_1, LOW);
         delayMicroseconds(STEP_PULSE_LOW_US);
     }
 
@@ -52,14 +48,14 @@ bool stepperMotorMoveOneCamPosition()
 
 bool stepperMotorEnable()
 {
-    digitalWrite(EN_PIN, LOW);
+    digitalWrite(EN_PIN_1, LOW);
     Serial.println("Enabled");
     return true;
 }
 
 bool stepperMotorStop()
 {
-    digitalWrite(EN_PIN, HIGH);
+    digitalWrite(EN_PIN_1, HIGH);
     Serial.println("Aborted");
     return true;
 }
