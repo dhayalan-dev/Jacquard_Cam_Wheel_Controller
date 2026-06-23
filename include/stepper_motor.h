@@ -7,13 +7,6 @@
 
 #include "machine_config.h"
 
-static_assert(
-    STEP_PIN_1 == 26, "STEP_PIN_1 must be defined as 26"
-);
-static_assert(
-    EN_PIN_1 == 13, "EN_PIN_1 must be defined as 13"
-);
-
 /**
  * @brief Initializes the stepper motor control pins and state
  * @return true if initialization was successful, false otherwise

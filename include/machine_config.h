@@ -79,12 +79,12 @@
 #define STEP_PULSE_HIGH_US 500
 #define STEP_PULSE_LOW_US 500
 
-#define SOLENOID_ACTUATION_DELAY_MS 10 
+#define SOLENOID_ACTUATION_DELAY_MS 30 
 
 /* PIN DEFINITIONS 
  * Pattern Setter */
 #define STEP_PIN_1    26
-#define EN_PIN_1      13
+#define EN_PIN_1      27
 
 #define SOLENOID_PIN_1 14
 

@@ -145,7 +145,7 @@ static bool _machineActuateSolenoid(bool state)
         SOLENOID_PIN_1,
         state ? LOW : HIGH
     );
-    delay(10);
+    delay(SOLENOID_ACTUATION_DELAY_MS);
 
     return true;
 }
